@@ -1,3 +1,13 @@
+"""
+	This program realize a logistic regression for a dataset of students. 
+	The dataset is composed by two past notes and the result (approved or not) of thes students.
+	The logistic regression will try to divide the dataset in approved and reproved students.
+
+	Author: Higor Coimbra - Matheus Rosa
+	Class: Computational Inteligence
+	University: CEFET-MG
+"""
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
