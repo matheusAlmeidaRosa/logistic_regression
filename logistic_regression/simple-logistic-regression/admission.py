@@ -20,14 +20,30 @@ eps = 0.0000001
 
 def plot_data(X, y, theta, line):
 	plt.figure(1)
+	plt.title("Simple Logistic Regression")
 	plt.xlabel("Exam 1 score")
 	plt.ylabel("Exam 2 score")
 
+	n1 = False
+	n2 = False
 	for i, point in enumerate(X):
-		marker = 'k+' if y[i] is 1 else 'yo'
-		plt.plot(point[0], point[1], marker)
+		if y[i]:
+			marker = 'k+'
+			label = 'Admitted'
+		else:
+			marker = 'yo'
+			label = 'Not admitted'
+		if y[i] and not n1:
+			plt.plot(point[0], point[1], marker, label=label)
+			n1 = True
+		elif not y[i] and not n2:
+			plt.plot(point[0], point[1], marker, label=label)
+			n2 = True
+		else:
+			plt.plot(point[0], point[1], marker)
 
-	plt.plot(line[0], line[1])
+	plt.plot(line[0], line[1], color='r')
+	plt.legend(loc=1)
 	plt.show()
 
 def sigmoid(x):
