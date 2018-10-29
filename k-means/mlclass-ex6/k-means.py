@@ -4,52 +4,68 @@ import random
 import sys
 
 def initCentroids(x, k):
-	centroids = []
+	centroids = {}
 
 	for i in range(k):
-		newIdx = random.randint(0, len(x[0]))
+		newIdx = random.randint(0, len(x))
 		while newIdx in centroids:
-			newIdx = random.randint(0, len(x[0]))
-		centroids.append(newIdx)
+			newIdx = random.randint(0, len(x))
+		centroids[i] = x[newIdx]
 	return centroids
 
-def findClosestCentroid(x, centroids):
-	xCent = []
-	for i in len(x[0]):
-		small = 0
+def findClosestCentroid(x, centroids, elements_of_each_centroid):
+	for i in range(len(x)):
+		closest_centroid = 0
 		current_dist = sys.maxint
-		for cent in centroids:
-			dist = (x[0][cent]-x[0][i])**2+(x[1][cent]-x[1][i])**2
+		for idx, centroid in centroids.items():
+			dist = (centroid[0]-x[i][0])**2+(centroid[1]-x[i][1])**2
 			if (current_dist > dist):
-				small = cent
+				closest_centroid = idx
 				current_dist = dist
-		xCent.append(small)
-	return xCent
+		elements_of_each_centroid[closest_centroid].append(x[i])
+	return elements_of_each_centroid
 
-def computeMeans(x, idx, k):
-	pass
+def computeMeans(elements_of_each_centroid, k):
+	centroids = {}
+	for i in range(k):
+		new_centroid_x = 0
+		new_centroid_y = 0
+		for point in elements_of_each_centroid[i]:
+			new_centroid_x += point[0]
+			new_centroid_y += point[1]
+		centroids[i] = (new_centroid_x/len(elements_of_each_centroid[i]), new_centroid_y/len(elements_of_each_centroid[i]))
+	return centroids
 
-file = open('data2.txt');
-data_in = []
-x = []
-y = []
+def initializeDictElementsCentroid(centroids):
+	elements_of_each_centroid = {}
+	for i in range(k):
+		elements_of_each_centroid[i] = []
+	return elements_of_each_centroid
+
+file = open('data2.txt')
+X = []
 for line in file:
 	l = line.split(',')
-	x.append(float(l[0]))
-	y.append(float(l[1]))
+	t = (float(l[0]), float(l[1]))
+	X.append(t)
 
-X = [x, y]
 
-"""plt.figure(1)
+plt.figure(1)
 plt.title("k-means")
-plt.scatter(x, y, marker='.')
-plt.show()"""
+for point in X:
+	plt.scatter(point[0], point[1], marker='.', color='r')
 
-iterations = 0
 
-k = 4
+iterations = 10
+
+k = 3
 centroids = initCentroids(X, k)
-print(centroids)
 for i in range(iterations):
-	idx = findClosestCentroid(X, centroids)
-	centroids = computeMeans(X, idx, K)
+	elements_of_each_centroid = initializeDictElementsCentroid(k)
+	elements_of_each_centroid = findClosestCentroid(X, centroids, elements_of_each_centroid)
+	centroids = computeMeans(elements_of_each_centroid, k)
+
+for key, point in centroids.items():
+	plt.scatter(point[0], point[1], marker='x', color='b')
+
+plt.show()
